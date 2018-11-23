@@ -1,0 +1,33 @@
+### OS-specific
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+
+# Windows
+Thumbs.db
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+### Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.log
+.env
+.venv
+env/
+venv/
+ENV/
+
+### Pycharm
+.idea/
+
+# Doxygen-generated
+doxygen-doc/

@@ -6,13 +6,28 @@ from euro_diffusion import Country, Simulator
 
 
 def main(argv):
-    countries = [
-        Country('France', 1, 4, 4, 6),
-        Country('Spain', 3, 1, 6, 3),
-        Country('Portugal', 1, 1, 2, 2)
-    ]
-    for c, d in Simulator(countries).run():
-        print(c.name, ':', d)
+    f = sys.stdin
+    case_number = 1
+    while True:
+        country_count = int(f.readline())
+        if country_count == 0:
+            break
+        if not(1 <= country_count <= 20):
+            print('Country count should be between 1 and 20')
+            return 1
+        countries = []
+        for i in range(country_count):
+            name, *coordinates = f.readline().split()
+            xl, yl, xh, yh = map(int, coordinates)
+            if not(1 <= xl <= xh <= 10 and 1 <= yl <= yh <= 10):
+                print('city', name, 'has coordinates outside of allowed bounds - [1, 10] or in the wrong order')
+                return 1
+            countries.append(Country(name, xl, yl, xh, yh))
+        print('Case Number', case_number)
+        for c, d in Simulator(countries).run():
+            print(c.name, d)
+        case_number += 1
+    return 0
 
 
 if __name__ == '__main__':

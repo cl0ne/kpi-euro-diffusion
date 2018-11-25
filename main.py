@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import sys
+from functools import reduce
 from typing import List, Tuple
 
 from euro_diffusion.country import Country, Point, City
@@ -59,46 +60,51 @@ class Region:
         return bottom_left, top_right
 
     def simulate(self):
-        return [
-            (country, self._simulate_country(i))
-            for i, country in enumerate(self._countries)
-        ]
+        days_per_motif = (
+            self._simulate_country(i)
+            for i in range(len(self._countries))
+        )
+
+        aggregator = lambda x, y: map(max, zip(x, y))
+        aggregated_days = reduce(aggregator, days_per_motif)
+        result = zip(self._countries, aggregated_days)
+
+        return sorted(result, key=lambda x: x[1])
 
     def _simulate_country(self, country_index):
         queue: List[City] = []
         for i, country in enumerate(self._countries):
             initial_balance = 0
-            if i == country_index:
+            is_current = (i == country_index)
+            if is_current:
                 initial_balance = 1000_000
                 queue = country.cities.copy()
-            for city in country.cities:
-                city.balance = initial_balance
-                city.cached_income = 0
+            country.init(initial_balance, completion_state=is_current)
         representative_factor = 1_000
         day = 0
         while True:
             new_cities = []
+            day += 1
             for city in queue:
                 representative_portion = city.balance // representative_factor
                 if representative_portion == 0:
                     continue
-                for n_x, n_y in self._get_neighbours(city.x, city.y):
-                    neighbour: City = self._field[n_x, n_y]
+                for x, y in self._get_neighbours(city.x, city.y):
+                    neighbour: City = self._field[x, y]
                     if neighbour is None:
                         continue
-                    if neighbour.balance == 0 and neighbour.cached_income == 0:
+                    if neighbour.is_empty:
                         new_cities.append(neighbour)
-                    city.cached_income -= representative_portion
-                    neighbour.cached_income += representative_portion
-            day += 1
+                        neighbour.country.add_complete_city(day)
+                    city.add_income(-representative_portion)
+                    neighbour.add_income(representative_portion)
             queue += new_cities
             for city in queue:
-                city.balance += city.cached_income
-                city.cached_income = 0
+                city.update_balance()
 
             if self._city_count == len(queue):
                 break
-        return day
+        return [c.completion_day for c in self._countries]
 
     def _get_neighbours(self, x, y):
         # Left

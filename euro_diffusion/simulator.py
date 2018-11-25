@@ -70,7 +70,7 @@ class Simulator:
         aggregated_days = reduce(aggregator, days_per_motif)
         result = zip(self._countries, aggregated_days)
 
-        return sorted(result, key=lambda x: x[1])
+        return sorted(result, key=lambda x: (x[1], x[0].name))
 
     def _simulate_country(self, country_index):
         queue: List[City] = []

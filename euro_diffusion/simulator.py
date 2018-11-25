@@ -4,21 +4,21 @@ from typing import List, Tuple, Iterable
 from euro_diffusion.country import Country, Point, City
 
 class Field:
-    def __init__(self, w, h, default_value=None):
-        self.w = w
-        self.h = h
+    def __init__(self, rows, columns, default_value=None):
+        self.rows = rows
+        self.columns = columns
         self._data = [
-            [default_value] * w
-            for _ in range(h)
+            [default_value] * columns
+            for _ in range(rows)
         ]
 
     def __getitem__(self, key):
-        x, y = key
-        return self._data[y][x]
+        r, c = key
+        return self._data[r][c]
 
     def __setitem__(self, key, value):
-        x, y = key
-        self._data[y][x] = value
+        r, c = key
+        self._data[r][c] = value
 
 
 class Simulator:
@@ -112,11 +112,11 @@ class Simulator:
         if x > 0:
             yield x - 1, y
         # Right
-        if (x + 1) < self._field.w:
+        if (x + 1) < self._field.rows:
             yield x + 1, y
         # Up
         if y > 0:
             yield x, y - 1
         # Down
-        if (y + 1) < self._field.h:
+        if (y + 1) < self._field.columns:
             yield x, y + 1

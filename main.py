@@ -18,7 +18,14 @@ def main(argv):
         countries = []
         for i in range(country_count):
             name, *coordinates = f.readline().split()
-            xl, yl, xh, yh = map(int, coordinates)
+            if len(name) > 25:
+                print(f'City "{name}" has name longer than 25 chars')
+                return 1
+            try:
+                xl, yl, xh, yh = map(int, coordinates)
+            except ValueError:
+                print('City coordinates should be 4 integers')
+                return 1
             if not(1 <= xl <= xh <= 10 and 1 <= yl <= yh <= 10):
                 print('city', name, 'has coordinates outside of allowed bounds - [1, 10] or in the wrong order')
                 return 1

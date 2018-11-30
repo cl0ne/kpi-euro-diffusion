@@ -22,6 +22,9 @@ class Field:
 
 
 class Simulator:
+    _REPRESENTATIVE_FACTOR = 1_000
+    _FULL_INITIAL_BALANCE = 1000_000
+
     def __init__(self, countries: List[Country]):
         self._countries = countries
         if len(countries) < 2:
@@ -78,16 +81,16 @@ class Simulator:
             initial_balance = 0
             is_current = (i == country_index)
             if is_current:
-                initial_balance = 1000_000
+                initial_balance = self._FULL_INITIAL_BALANCE
                 queue = country.cities.copy()
             country.init(initial_balance, completion_state=is_current)
-        representative_factor = 1_000
+
         day = 0
         while True:
             new_cities = []
             day += 1
             for city in queue:
-                representative_portion = city.balance // representative_factor
+                representative_portion = city.balance // self._REPRESENTATIVE_FACTOR
                 if representative_portion == 0:
                     continue
                 for x, y in self._get_neighbours(city.x, city.y):

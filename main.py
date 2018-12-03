@@ -33,17 +33,17 @@ def main(argv):
                 name, *coordinates = f.readline().split()
             except ValueError: # line was empty
                 print('Each line of the case should contain name',
-                      'of the country and its city coordinates')
+                      'of the country and its corner city coordinates')
                 return EXIT_FAIL
             if len(name) > MAX_COUNTRY_NAME_LENGTH:
-                print(f'City "{name}" has name longer than',
+                print(f'Country "{name}" has name longer than',
                        MAX_COUNTRY_NAME_LENGTH, 'chars')
                 return EXIT_FAIL
 
             try:
                 xl, yl, xh, yh = map(int, coordinates)
             except ValueError:
-                print('City coordinates should be 4 integers')
+                print('Country bounds should be 4 integers')
                 return EXIT_FAIL
 
             if not(
@@ -51,10 +51,10 @@ def main(argv):
                     and MIN_CITY_POS <= yl <= yh <= MAX_CITY_POS
             ):
                 bounds_str = '[{}, {}]'.format(MIN_CITY_POS, MAX_CITY_POS)
-                print('city', name,
-                      'has coordinates outside of allowed bounds -,',
+                print(f'country "{name}"',
+                      'has bounds outside of allowed range',
                       bounds_str,
-                      ',or in the wrong order')
+                      'or in the wrong order')
                 return EXIT_FAIL
 
             countries.append(Country(name, xl, yl, xh, yh))

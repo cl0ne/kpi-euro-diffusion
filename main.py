@@ -15,7 +15,12 @@ def main(argv):
     f = sys.stdin
     case_number = 1
     while True:
-        country_count = int(f.readline())
+        try:
+            country_count = int(f.readline())
+        except ValueError:
+            print('The first line of the case number', case_number,
+                  'should contain integer - number of countries')
+            return EXIT_FAIL
         if country_count == 0:
             break
         if not(MIN_COUNTRY_COUNT <= country_count <= MAX_COUNTRY_COUNT):
@@ -24,7 +29,12 @@ def main(argv):
             return EXIT_FAIL
         countries = []
         for i in range(country_count):
-            name, *coordinates = f.readline().split()
+            try:
+                name, *coordinates = f.readline().split()
+            except ValueError: # line was empty
+                print('Each line of the case should contain name',
+                      'of the country and its city coordinates')
+                return EXIT_FAIL
             if len(name) > MAX_COUNTRY_NAME_LENGTH:
                 print(f'City "{name}" has name longer than',
                        MAX_COUNTRY_NAME_LENGTH, 'chars')

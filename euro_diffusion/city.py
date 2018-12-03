@@ -9,7 +9,7 @@ class City:
 
     @property
     def is_empty(self):
-        return (self.balance + self.cached_income) == 0
+        return self.balance == 0 and self.cached_income == 0
 
     def add_income(self, amount: int):
         self.cached_income += amount

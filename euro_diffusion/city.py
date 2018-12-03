@@ -1,6 +1,6 @@
 
 class City:
-    def __init__(self, country, x, y):
+    def __init__(self, country, x: int, y: int):
         self.country: 'Country' = country
         self.x = x
         self.y = y
@@ -11,7 +11,7 @@ class City:
     def is_empty(self):
         return (self.balance + self.cached_income) == 0
 
-    def add_income(self, amount):
+    def add_income(self, amount: int):
         self.cached_income += amount
 
     def update_balance(self):

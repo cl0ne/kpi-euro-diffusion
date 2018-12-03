@@ -75,7 +75,7 @@ class Simulator:
 
         return sorted(result, key=lambda x: (x[1], x[0].name))
 
-    def _simulate_country(self, country_index):
+    def _simulate_country(self, country_index: int):
         queue: List[City] = []
         for i, country in enumerate(self._countries):
             initial_balance = 0
@@ -110,7 +110,7 @@ class Simulator:
                 break
         return [c.completion_day for c in self._countries]
 
-    def _get_neighbours(self, x, y):
+    def _get_neighbours(self, x: int, y: int) -> Iterable[Tuple[int, int]]:
         # Left
         if x > 0:
             yield x - 1, y

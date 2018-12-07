@@ -64,18 +64,24 @@ class Simulator:
         if len(self._countries) < 2:
             return ((c, 0) for c in self._countries)
 
+        # days_per_motif[country_a][country_b]
+        # is the amount of days required for the coins
+        # from country_a to reach every city in country_b
         days_per_motif = (
             self._simulate_country(i)
             for i in range(len(self._countries))
         )
 
+        # for each country we select maximum time needed for other
+        # countries' coins to reach every city in the current country
         aggregator = lambda x, y: map(max, zip(x, y))
         aggregated_days = reduce(aggregator, days_per_motif)
         result = zip(self._countries, aggregated_days)
 
+        # order countries by time and name
         return sorted(result, key=lambda x: (x[1], x[0].name))
 
-    def _simulate_country(self, country_index: int):
+    def _simulate_country(self, country_index: int) -> List[int]:
         queue: List[City] = []
         for i, country in enumerate(self._countries):
             initial_balance = 0

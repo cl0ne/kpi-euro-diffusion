@@ -15,8 +15,11 @@ def main(argv):
     f = sys.stdin
     case_number = 1
     while True:
+        l = f.readline().strip()
+        if not l: # allow empty lines
+            continue
         try:
-            country_count = int(f.readline())
+            country_count = int(l)
         except ValueError:
             print('The first line of the case number', case_number,
                   'should contain integer - number of countries')
